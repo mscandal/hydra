@@ -59,8 +59,8 @@ function getLoaders() {
             }
         },
         {
-            test: /\.css$/,
-            loader: 'css-loader'
+            test: /\.(scss|css)$/,
+            loader: 'css-loader!sass-loader'
         },
         {
             test: /\.(jpe?g|png|gif|svg)$/i,

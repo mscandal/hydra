@@ -5,13 +5,17 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableHeader from 'material-ui/lib/table/table-header';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
+import JobStore from 'stores/JobStore';
+import JobActionCreator from 'actions/JobActionCreator';
 
-export default class JobsView extends React.Component {
+export default React.createClass({
 
-  constructor(props) {
-    super(props);
+  mixins: [
+      JobStore.mixin
+  ],
 
-    this.state = {
+  getInitialState() {
+    return {
       fixedHeader: true,
       fixedFooter: true,
       stripedRows: false,
@@ -20,9 +24,30 @@ export default class JobsView extends React.Component {
       multiSelectable: false,
       enableSelectAll: false,
       deselectOnClickaway: true,
-      height: '300px'
+      height: '300px',
+      columnData: [{
+          label: 'ID',
+          name: 'id'
+      }, {
+          label: 'Creator',
+          name: 'creator'
+      }, {
+          label: 'Description',
+          name: 'description'
+      }]
     };
-  }
+  },
+
+
+  getStateFromStores() {
+    return {
+        jobs: JobStore.getJobs().valueSeq().toArray()
+    }
+},
+
+  componentDidMount() {
+      JobActionCreator.getList();
+  },
 
   render() {
     return (
@@ -37,7 +62,7 @@ export default class JobsView extends React.Component {
         >
           <TableHeader enableSelectAll={this.state.enableSelectAll}>
             <TableRow>
-                {this.props.columnData.map( (row, index) => (
+                {this.state.columnData.map( (row, index) => (
                     <TableHeaderColumn key={index}>{row.label}</TableHeaderColumn>
                 ))}
             </TableRow>
@@ -47,11 +72,11 @@ export default class JobsView extends React.Component {
             showRowHover={this.state.showRowHover}
             stripedRows={this.state.stripedRows}
           >
-            {this.props.tableData.map( (row, index) => (
-              <TableRow key={index} selected={row.selected}>
-                {this.props.columnData.map( (column, columnIndex) => (
+            {this.state.jobs.map((job, index) => (
+              <TableRow key={index} selected={job.selected}>
+                {this.state.columnData.map( (column, columnIndex) => (
                     <TableRowColumn key={columnIndex}>
-                        {row[column.name]}
+                        {job.get(column.name)}
                     </TableRowColumn>
                 ))}
               </TableRow>
@@ -61,47 +86,4 @@ export default class JobsView extends React.Component {
       </div>
     );
   }
-}
-
-JobsView.defaultProps = {
-    columnData: [{
-        label: 'ID',
-        name: 'id'
-    }, {
-        label: 'Creator',
-        name: 'creator'
-    }, {
-        label: 'Status',
-        name: 'status'
-    }],
-
-    tableData: [{
-        id: '1',
-        creator: 'user1',
-        status: 'enabled'
-    }, {
-        id: '2',
-        creator: 'user2',
-        status: 'disabled'
-    }, {
-        id: '3',
-        creator: 'user3',
-        status: 'enabled'
-    }, {
-        id: '4',
-        creator: 'user4',
-        status: 'enabled'
-    }, {
-        id: '5',
-        creator: 'user5',
-        status: 'enabled'
-    }, {
-        id: '6',
-        creator: 'user6',
-        status: 'enabled'
-    }, {
-        id: '7',
-        creator: 'user7',
-        status: 'enabled'
-    }]
-};
+});

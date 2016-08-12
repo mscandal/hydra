@@ -21,8 +21,8 @@ const constants = {
     JOB_GET_FAILURE: 'JOB_GET_FAILURE'
 };
 
-const socketEvents = require('./actions/WebSocketActionCreator');
-
-socketEvents.forEach(event => constants[event] = event);
+// const socketEvents = require('./actions/WebSocketActionCreator');
+//
+// socketEvents.forEach(event => constants[event] = event);
 
 module.exports = constants;

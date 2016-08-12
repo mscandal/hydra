@@ -105,7 +105,7 @@ module.exports = new APIActionCreator({
         createRequest(ids, enable) {
             return {
                 params: {
-                    jobs: ids.join(',')
+                    jobs: ids.join(','),
                     enable: enable ? 1 : 0
                 }
             };

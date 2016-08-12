@@ -15,8 +15,14 @@
 'use strict';
 
 import SpawnView from 'components/views/spawn-view';
+import JobsView from 'components/views/jobs-view';
 import ReactDOM from 'react-dom';
 import React from 'react';
+
+window.JobsView = JobsView;
+window.ReactDOM = ReactDOM;
+
+
 
 ReactDOM.render(
     <SpawnView><div id={'main'}/></SpawnView>,
@@ -71,6 +77,7 @@ function(
     _,
     $
 ){
+    //debugger;
     alertify.defaults.glossary.title="";
     alertify.defaults.transition = "slide";
     alertify.defaults.theme.ok = "btn btn-primary";
@@ -328,20 +335,11 @@ function(
     });
     app.router.on("route:showJobsTable",function(){
         app.trigger("loadJobTable");
-        app.showView(app.jobTable,"#jobs",["configModel","parameterCollection","job"])
-        app.makeHtmlTitle("Jobs");
-    });
-    app.router.on("route:showJobCompactTable",function(){
-        app.trigger("loadJobCompactTable");
+        //debugger;
         app.showView(app.jobTable,"#jobs",["configModel","parameterCollection","job"]);
+
+        ReactDOM.render(<JobsView />, document.getElementById('react-job-table'));
         app.makeHtmlTitle("Jobs");
-        //app.jobTable.resize();
-    });
-    app.router.on("route:showJobComfyTable",function(){
-        app.trigger("loadJobComftTable");
-        app.showView(app.jobTable,"#jobs",["configModel","parameterCollection","job"]);
-        app.makeHtmlTitle("Jobs");
-        //app.jobTable.resize();
     });
     app.router.on("route:showQuickTask",function(jobId){
         app.trigger("loadJobTable");
@@ -656,14 +654,16 @@ function(
     app.user.on("change:username",function(){
         $("#usernameBox").html(app.user.get("username"));
     });
-    app.on('loadJobTable',function(){
+    app.on('loadJobTable', function(){
+        //debugger;
         var state = Cookies.getJSON("spawn");
-        if(!_.isUndefined(state) && state.jobCompact){
-            app.trigger("loadJobCompactTable");
-        }
-        else{
-            app.trigger("loadJobComftTable");
-        }
+        app.jobTable = new Jobs.JobTable();
+        // if(!_.isUndefined(state) && state.jobCompact){
+        //     app.trigger("loadJobCompactTable");
+        // }
+        // else{
+        //     app.trigger("loadJobComftTable");
+        // }
     });
     app.on('loadJobCompactTable',function(){
         if(_.isUndefined(app.jobTable) || !_.isEqual(app.jobTable.id,'compactJobTable')){

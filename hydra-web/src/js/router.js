@@ -23,8 +23,6 @@ define([
             routes: {
                 '': 'showIndex',
                 'jobs': 'showJobsTable',
-                'jobs/compact': 'showJobCompactTable',
-                'jobs/comfortable': 'showJobComfyTable',
                 'jobs/:jobid/quick': 'showQuickTask',
                 'jobs/:jobid/quick/:node': 'showQuickTaskDetail',
 

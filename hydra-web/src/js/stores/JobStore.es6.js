@@ -5,6 +5,7 @@ const Immutable = ImmutableStore.Immutable;
 const constants = require('./../constants');
 
 module.exports = new ImmutableStore({
+    displayName: 'JobStore',
     init() {
         this.jobs = Immutable.Map({});
         this.bindActions(
@@ -56,14 +57,14 @@ module.exports = new ImmutableStore({
 
         },
         validateSuccess({request, response}) {
-            if (JSON.parse(reponse.body).result === 'valid') {
+            if (reponse.body.result === 'valid') {
             }
         },
         validateFailure({request, response}) {
 
         },
         startSuccess({request, response}) {
-            const body = JSON.parse(response.body);
+            const body = response.body;
             // body.success;
             // body.unauthorized;
             // body.error;
@@ -72,7 +73,7 @@ module.exports = new ImmutableStore({
 
         },
         stopSuccess({request, response}) {
-            const body = JSON.parse(response.body);
+            const body = response.body;
             // body.success;
             // body.unauthorized;
             // body.error;
@@ -82,7 +83,7 @@ module.exports = new ImmutableStore({
         },
         listSuccess({request, response}) {
             const jobs = {};
-            JSON.parse(response.body).forEach(job => jobs[job.id] = job);
+            response.body.forEach(job => jobs[job.id] = job);
             this.jobs = Immutable.fromJS(jobs);
         },
         listFailure({request, response}) {
@@ -98,8 +99,7 @@ module.exports = new ImmutableStore({
         getSuccess({request, response}) {
             const {id} = request.params;
             const job = Immutable
-                .fromJS(JSON
-                    .parse(response.body));
+                .fromJS(response.body);
 
             this.jobs = this.jobs.set(id, job);
         },
@@ -109,14 +109,8 @@ module.exports = new ImmutableStore({
     },
     // Getters
     public: {
-        getUrl() {
-            return this.url;
-        },
-        getCount: function () {
-            return this.count;
-        },
-        getData: function () {
-            return this.data;
+        getJobs() {
+            return this.jobs;
         }
     }
 });
